@@ -16,8 +16,7 @@ import random
 import chess
 import chess.engine
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-SF_PATH = os.path.join(HERE, "engines", "stockfish", "stockfish-ubuntu-x86-64-avx2")
+import osutil
 
 #            margin cp, spark weight, randomness (softmax temp), multipv
 STYLES = {
@@ -160,7 +159,7 @@ class Brain:
         self.style = style
         self.think = think          # stockfish seconds per move
         self.log = log
-        self.sf = chess.engine.SimpleEngine.popen_uci(SF_PATH)
+        self.sf = chess.engine.SimpleEngine.popen_uci(osutil.stockfish_path(log))
         self.sf.configure({"Threads": max(1, (os.cpu_count() or 2) // 2), "Hash": 128})
 
     def close(self):

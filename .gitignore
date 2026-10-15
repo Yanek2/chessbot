@@ -3,3 +3,4 @@ engines/
 __pycache__/
 *.log
 templates.npz
+tests/__pycache__/

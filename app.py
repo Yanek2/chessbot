@@ -14,11 +14,13 @@ import tkinter as tk
 import numpy as np
 from pynput import keyboard, mouse
 
+import osutil
 import vision
 from bot import Bot
 from brain import STYLES
 
 BG, FG, ACC, MUTED = "#262421", "#ece8e1", "#81b64c", "#9a968f"
+FONT = {"Windows": "Segoe UI", "Darwin": "Helvetica Neue"}.get(osutil.SYSTEM, "DejaVu Sans")
 
 
 class DesktopIO:
@@ -87,7 +89,7 @@ class Overlay:
     def _build(self):
         bar = tk.Frame(self.root, bg="#1f1e1b")
         bar.pack(fill="x")
-        title = tk.Label(bar, text="♞ ChessBot", bg="#1f1e1b", fg=FG, font=("DejaVu Sans", 11, "bold"), padx=8, pady=5)
+        title = tk.Label(bar, text="♞ ChessBot", bg="#1f1e1b", fg=FG, font=(FONT, 11, "bold"), padx=8, pady=5)
         title.pack(side="left")
         tk.Button(bar, text="✕", command=self.quit, bg="#1f1e1b", fg=MUTED, bd=0,
                   activebackground="#b33", activeforeground="white", padx=8).pack(side="right")
@@ -123,7 +125,7 @@ class Overlay:
     def _btn(self, parent, text, cmd, color):
         return tk.Button(parent, text=text, command=cmd, bg=color, fg="white", bd=0,
                          activebackground=color, activeforeground="white",
-                         font=("DejaVu Sans", 10, "bold"), pady=6)
+                         font=(FONT, 10, "bold"), pady=6)
 
     def _drag_start(self, e):
         self._dx, self._dy = e.x_root - self.root.winfo_x(), e.y_root - self.root.winfo_y()
@@ -223,4 +225,5 @@ class Overlay:
 
 
 if __name__ == "__main__":
+    osutil.setup_dpi()
     Overlay().run()

@@ -13,6 +13,7 @@ import threading
 import time
 import chess
 
+import osutil
 import vision
 from brain import Brain
 
@@ -37,6 +38,9 @@ class Bot:
 
     # ---------------------------------------------------------------- lock
     def lock(self):
+        if not osutil.on_game_window():
+            self.status(f"Click on your {osutil.GAME_TITLE} window first - I only play there")
+            return False
         img, ox, oy = self.io.grab_full()
         found = vision.find_board(img)
         if not found:
@@ -197,7 +201,7 @@ class Bot:
     def _run(self):
         try:
             if self.brain is None:
-                self.brain = Brain(self.style)
+                self.brain = Brain(self.style, log=self.status)
             self.status("Playing...")
             while not self._stop.is_set():
                 self.brain.style = self.style
@@ -248,6 +252,11 @@ class Bot:
         # board changed meanwhile (user moved / undo)? start over
         if self.stable_read() != self.rows_of(board):
             return
+        if not osutil.on_game_window():
+            self.status(f"Paused - {osutil.GAME_TITLE} isn't the active window")
+            self.playing = False
+            self._stop.set()
+            return
         san = board.san(move)
         target = board.copy()
         target.push(move)
@@ -268,6 +277,11 @@ class Bot:
                 self.io.click(tx, ty)
             else:
                 self.io.drag(fx, fy, tx, ty)
+            if not osutil.on_game_window(own_title=None):
+                self.status(f"Stopped - that click didn't land on {osutil.GAME_TITLE}")
+                self.playing = False
+                self._stop.set()
+                return
             if self._landed(want, move):
                 self.board = target
                 self.status(f"Played {san}  ({info})")

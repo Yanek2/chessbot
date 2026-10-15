@@ -23,6 +23,10 @@ def grab(region=None):
             "left": int(region[0]), "top": int(region[1]),
             "width": int(region[2]), "height": int(region[3])}
         img = np.asarray(s.grab(mon))[:, :, :3][:, :, ::-1]
+        if img.shape[1] != mon["width"]:
+            # macOS Retina: capture is 2x; scale to the points the mouse uses
+            img = np.asarray(Image.fromarray(np.ascontiguousarray(img)).resize(
+                (mon["width"], mon["height"]), Image.BOX))
         return np.ascontiguousarray(img), mon["left"], mon["top"]
 
 

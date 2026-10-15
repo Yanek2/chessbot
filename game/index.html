@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChessLocal</title>
+<link rel="icon" href="pieces/wN.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="sidenav">
+  <div class="logo"><img src="pieces/wN.svg" alt=""><span>ChessLocal</span></div>
+  <button class="nav-item active" data-mode="bot"><span class="ic">♞</span><span>Play Bots</span></button>
+  <button class="nav-item" data-mode="friend"><span class="ic">⇄</span><span>Pass &amp; Play</span></button>
+  <button class="nav-item" data-mode="analysis"><span class="ic">⌕</span><span>Analysis</span></button>
+  <div class="nav-spacer"></div>
+  <button class="nav-item" id="btn-settings"><span class="ic">⚙</span><span>Settings</span></button>
+</nav>
+
+<main class="layout">
+  <section class="board-col">
+    <div class="player-bar" id="bar-top">
+      <div class="avatar"></div>
+      <div class="pinfo">
+        <div class="pname"><span class="name"></span> <span class="rating"></span></div>
+        <div class="captured"></div>
+      </div>
+      <div class="clock"></div>
+    </div>
+
+    <div class="board-row">
+      <div class="evalbar hidden" id="evalbar">
+        <div class="eval-white"></div>
+        <span class="eval-text"></span>
+      </div>
+      <div class="board" id="board">
+        <div class="squares"></div>
+        <div class="hl-layer"></div>
+        <div class="pieces"></div>
+        <svg class="arrows" viewBox="0 0 8 8"></svg>
+        <div class="promo hidden"></div>
+        <div class="modal hidden" id="gameover">
+          <div class="modal-card">
+            <button class="modal-x">×</button>
+            <div class="modal-head">
+              <div class="trophy">♛</div>
+              <h2 class="go-title"></h2>
+              <div class="go-sub"></div>
+            </div>
+            <div class="go-body">
+              <button class="btn-green big" id="go-review">★ Game Review</button>
+              <div class="go-row">
+                <button class="btn-grey" id="go-new">New Game</button>
+                <button class="btn-grey" id="go-rematch">Rematch</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="player-bar" id="bar-bottom">
+      <div class="avatar"></div>
+      <div class="pinfo">
+        <div class="pname"><span class="name"></span> <span class="rating"></span></div>
+        <div class="captured"></div>
+      </div>
+      <div class="clock"></div>
+    </div>
+  </section>
+
+  <aside class="panel" id="panel"></aside>
+</main>
+
+<div class="overlay hidden" id="settings">
+  <div class="dialog">
+    <div class="dialog-head">Settings <button class="modal-x" data-close>×</button></div>
+    <label class="row">Board theme
+      <select id="set-theme">
+        <option value="green">Green</option>
+        <option value="brown">Brown</option>
+        <option value="blue">Blue</option>
+        <option value="purple">Purple</option>
+        <option value="grey">Grey</option>
+      </select>
+    </label>
+    <label class="row">Sounds <input type="checkbox" id="set-sound" checked></label>
+    <label class="row">Show legal moves <input type="checkbox" id="set-legal" checked></label>
+    <label class="row">Show coordinates <input type="checkbox" id="set-coords" checked></label>
+    <label class="row">Show eval bar while playing <input type="checkbox" id="set-eval"></label>
+    <label class="row">Always promote to queen <input type="checkbox" id="set-autoq"></label>
+    <label class="row">Animation speed
+      <select id="set-anim"><option value="0">None</option><option value="120">Fast</option><option value="200" selected>Normal</option><option value="320">Slow</option></select>
+    </label>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
