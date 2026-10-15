@@ -27,8 +27,10 @@ def serving():
 
 
 def serve():
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=game_dir())
-    handler.log_message = lambda *a: None
+    class Quiet(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+    handler = functools.partial(Quiet, directory=game_dir())
     http.server.SimpleHTTPRequestHandler.extensions_map[".wasm"] = "application/wasm"
     httpd = socketserver.ThreadingTCPServer(("127.0.0.1", PORT), handler)
     httpd.daemon_threads = True
