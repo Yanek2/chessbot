@@ -72,8 +72,8 @@ class Overlay:
         self.root.overrideredirect(True)
         self.root.attributes("-topmost", True)
         self.root.configure(bg=BG, highlightthickness=1, highlightbackground="#3c3a37")
-        sw = self.root.winfo_screenwidth()
-        self.root.geometry(f"+{sw - 300}+40")
+        sh = self.root.winfo_screenheight()
+        self.root.geometry(f"+12+{sh - 330}")     # bottom-left, clear of the board
         self.msgs = queue.Queue()
         self.io = DesktopIO()
         self.bot = Bot(self.io, status=self.msgs.put)
@@ -81,6 +81,7 @@ class Overlay:
         self._build()
         self._hotkeys()
         self.root.after(100, self._pump)
+        self.root.after(1000, self._keep_on_top)
 
     # ------------------------------------------------------------------ UI
     def _build(self):
@@ -205,6 +206,11 @@ class Overlay:
         except queue.Empty:
             pass
         self.root.after(100, self._pump)
+
+    def _keep_on_top(self):
+        self.root.lift()
+        self.root.attributes("-topmost", True)
+        self.root.after(1500, self._keep_on_top)
 
     def quit(self):
         self.bot.stop()
