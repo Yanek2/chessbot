@@ -106,7 +106,7 @@ class Overlay:
         self.style = tk.StringVar(value="Mixed")
         self.speed = tk.StringVar(value="Normal")
         for label, var, opts in (("Style", self.style, list(STYLES)),
-                                 ("Speed", self.speed, ["Fast", "Normal", "Slow"])):
+                                 ("Speed", self.speed, ["Fast", "Normal", "Mixed", "Slow"])):
             f = tk.Frame(body, bg=BG)
             f.pack(fill="x", pady=(8, 0))
             tk.Label(f, text=label, bg=BG, fg=MUTED, width=6, anchor="w").pack(side="left")

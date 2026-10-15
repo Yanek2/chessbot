@@ -16,7 +16,7 @@ import chess
 import vision
 from brain import Brain
 
-SPEEDS = {"Fast": 0.45, "Normal": 1.0, "Slow": 1.7}
+SPEEDS = {"Fast": 0.45, "Normal": 1.0, "Slow": 1.7, "Mixed": None}   # Mixed: varies per move
 
 
 class Bot:
@@ -216,6 +216,14 @@ class Bot:
 
     def _human_delay(self, board, move, eval_text):
         mult = SPEEDS.get(self.speed, 1.0)
+        if mult is None:
+            # Mixed: some quick moves, some normal, some long thinks;
+            # sharp positions (where we dodged the engine move) get the long ones
+            if "human move" in eval_text or "forced" in eval_text:
+                mult = random.uniform(1.3, 2.2)
+            else:
+                mult = random.choices([random.uniform(0.35, 0.6), random.uniform(0.8, 1.2),
+                                       random.uniform(1.4, 2.0)], weights=[35, 45, 20])[0]
         n = board.fullmove_number
         if len(list(board.legal_moves)) == 1:
             base = random.uniform(0.6, 1.2)
@@ -231,7 +239,7 @@ class Bot:
     def _play_one(self):
         board = self.board.copy()
         t0 = time.time()
-        self.brain.think = 0.4 if SPEEDS[self.speed] < 1 else 0.8
+        self.brain.think = 0.4 if self.speed == "Fast" else 0.8
         move, info = self.brain.choose(board)
         wait = self._human_delay(board, move, info) - (time.time() - t0)
         self.status(f"Thinking... {board.san(move)}  ({info})")
